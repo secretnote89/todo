@@ -503,10 +503,15 @@
             hideMessage();
 
             try {
+                // 현재 페이지의 디렉토리를 기반으로 index.html 경로 생성
+                const currentUrl = window.location.href;
+                const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+                const redirectUrl = baseUrl + 'index.html';
+
                 const { data, error } = await supabaseClient.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        redirectTo: window.location.origin + '/kosa-vibecoding-2026-1st/src/exercise/secretnote89/day02/todo/docs/index.html'
+                        redirectTo: redirectUrl
                     }
                 });
 
