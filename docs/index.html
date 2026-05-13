@@ -496,7 +496,7 @@
             const { data: { session } } = await supabaseClient.auth.getSession();
 
             if (!session) {
-                window.location.href = '../auth.html';
+                window.location.href = './auth.html';
                 return false;
             }
 
@@ -508,7 +508,7 @@
         // 로그아웃
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await supabaseClient.auth.signOut();
-            window.location.href = '../auth.html';
+            window.location.href = './auth.html';
         });
 
         // Todos 로드
