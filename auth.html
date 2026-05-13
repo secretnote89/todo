@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - Todo List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #ffd1dc 0%, #c4e0f9 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #b4a7d6 0%, #9d8fc4 100%);
+            color: white;
+            padding: 32px 24px;
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            background: #fafafa;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #757575;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tab.active {
+            background: white;
+            color: #b4a7d6;
+            border-bottom: 2px solid #b4a7d6;
+        }
+
+        .tab:hover:not(.active) {
+            background: #f5f5f5;
+        }
+
+        .form-container {
+            padding: 32px 24px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: #757575;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 16px 12px 48px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #b4a7d6;
+            box-shadow: 0 0 0 2px rgba(180, 167, 214, 0.2);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #757575;
+            font-size: 20px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #b4a7d6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #9d8fc4;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn .material-icons {
+            font-size: 18px;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+            display: block;
+        }
+
+        .message.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+            display: block;
+        }
+
+        .message.info {
+            background: #e3f2fd;
+            color: #1565c0;
+            border-left: 4px solid #1565c0;
+            display: block;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #b4a7d6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .password-hint {
+            font-size: 12px;
+            color: #757575;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                max-width: 100%;
+            }
+
+            .header {
+                padding: 24px 16px;
+            }
+
+            .form-container {
+                padding: 24px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="header">
+            <div class="material-icons header-icon">check_circle</div>
+            <h1>Todo List</h1>
+            <div class="header-subtitle">나만의 할 일 관리</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="login">로그인</button>
+            <button class="tab" data-tab="signup">회원가입</button>
+        </div>
+
+        <div class="form-container">
+            <div id="message" class="message"></div>
+
+            <!-- 로그인 폼 -->
+            <form id="loginForm" style="display: block;">
+                <div class="form-group">
+                    <label for="loginEmail">이메일</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons input-icon">email</span>
+                        <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">비밀번호</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons input-icon">lock</span>
+                        <input type="password" id="loginPassword" placeholder="비밀번호" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn" id="loginBtn">
+                    <span class="material-icons">login</span>
+                    로그인
+                </button>
+            </form>
+
+            <!-- 회원가입 폼 -->
+            <form id="signupForm" style="display: none;">
+                <div class="form-group">
+                    <label for="signupEmail">이메일</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons input-icon">email</span>
+                        <input type="email" id="signupEmail" placeholder="your@email.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">비밀번호</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons input-icon">lock</span>
+                        <input type="password" id="signupPassword" placeholder="비밀번호 (최소 6자)" required minlength="6">
+                    </div>
+                    <div class="password-hint">최소 6자 이상 입력하세요</div>
+                </div>
+                <button type="submit" class="btn" id="signupBtn">
+                    <span class="material-icons">person_add</span>
+                    회원가입
+                </button>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 12px; color: #757575;">처리 중...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://ivessibhwguttctcgirb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2ZXNzaWJod2d1dHRjdGNnaXJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NjQ0MTMsImV4cCI6MjA5NDE0MDQxM30.0V5Oq2D2QzM-RtmfwvuDJKfWrsm1FnzSJOg-o-XSqsY';
+
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const tabs = document.querySelectorAll('.tab');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const messageDiv = document.getElementById('message');
+        const loadingDiv = document.getElementById('loading');
+
+        // 탭 전환
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const tabName = tab.dataset.tab;
+                if (tabName === 'login') {
+                    loginForm.style.display = 'block';
+                    signupForm.style.display = 'none';
+                } else {
+                    loginForm.style.display = 'none';
+                    signupForm.style.display = 'block';
+                }
+
+                hideMessage();
+            });
+        });
+
+        // 메시지 표시
+        function showMessage(text, type = 'info') {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+        }
+
+        function hideMessage() {
+            messageDiv.className = 'message';
+        }
+
+        function showLoading() {
+            loadingDiv.classList.add('active');
+            loginForm.style.display = 'none';
+            signupForm.style.display = 'none';
+        }
+
+        function hideLoading() {
+            loadingDiv.classList.remove('active');
+            const activeTab = document.querySelector('.tab.active').dataset.tab;
+            if (activeTab === 'login') {
+                loginForm.style.display = 'block';
+            } else {
+                signupForm.style.display = 'block';
+            }
+        }
+
+        // 로그인
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            hideMessage();
+            showLoading();
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) throw error;
+
+                showMessage('로그인 성공! 리다이렉트 중...', 'success');
+                setTimeout(() => {
+                    window.location.href = './index.html';
+                }, 1000);
+
+            } catch (error) {
+                hideLoading();
+                showMessage(error.message || '로그인에 실패했습니다.', 'error');
+            }
+        });
+
+        // 회원가입
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+
+            if (password.length < 6) {
+                showMessage('비밀번호는 최소 6자 이상이어야 합니다.', 'error');
+                return;
+            }
+
+            hideMessage();
+            showLoading();
+
+            try {
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email,
+                    password
+                });
+
+                if (error) throw error;
+
+                hideLoading();
+                showMessage('회원가입 성공! 이메일을 확인하여 인증을 완료해주세요.', 'success');
+
+                // 폼 초기화
+                document.getElementById('signupEmail').value = '';
+                document.getElementById('signupPassword').value = '';
+
+            } catch (error) {
+                hideLoading();
+                showMessage(error.message || '회원가입에 실패했습니다.', 'error');
+            }
+        });
+
+        // 이미 로그인된 경우 리다이렉트
+        (async () => {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                window.location.href = './index.html';
+            }
+        })();
+    </script>
+</body>
+</html>
